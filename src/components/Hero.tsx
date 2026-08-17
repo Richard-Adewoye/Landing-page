@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { ArrowRight, Check, Play, X, Volume2, VolumeX } from "lucide-react";
+import { ArrowRight, Check, Play, X } from "lucide-react";
+import { useInteraction } from "../context/InteractionContext";
 
 export default function Hero() {
+  const { setProgress, recordInteraction } = useInteraction();
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [email, setEmail] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -37,12 +39,24 @@ export default function Hero() {
     return () => clearInterval(interval);
   }, [isFormOpen, isSubmitted]);
 
+  const handleOpenForm = () => {
+    setIsFormOpen(true);
+    setProgress((prev) => Math.max(prev, 45));
+  };
+
+  const handleEmailChange = (val: string) => {
+    setEmail(val);
+    const emailBonus = Math.min(45, Math.round(val.length * 3.2));
+    setProgress(Math.max(45, 45 + emailBonus));
+  };
+
   // Handle submit with resetting timing
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!email) return;
 
     setIsSubmitted(true);
+    setProgress(100);
 
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
@@ -52,7 +66,13 @@ export default function Hero() {
       setIsSubmitted(false);
       setIsFormOpen(false);
       setEmail("");
+      setProgress(50);
     }, 4000);
+  };
+
+  const handleOpenDemo = () => {
+    setShowDemoModal(true);
+    recordInteraction(20);
   };
 
   useEffect(() => {
@@ -105,7 +125,7 @@ export default function Hero() {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.95 }}
                   transition={{ duration: 0.2 }}
-                  onClick={() => setIsFormOpen(true)}
+                  onClick={handleOpenForm}
                   className="px-10 py-3 text-[14px] font-medium border border-white/10 rounded-full hover:border-white/30 hover:bg-white/[0.02] transition-all duration-300 text-white/90 backdrop-blur-sm cursor-pointer whitespace-nowrap shadow-lg flex items-center gap-2 group"
                 >
                   Get early access
@@ -126,7 +146,7 @@ export default function Hero() {
                     required
                     value={email}
                     disabled={isSubmitted}
-                    onChange={(e) => setEmail(e.target.value)}
+                    onChange={(e) => handleEmailChange(e.target.value)}
                     placeholder={placeholder}
                     autoFocus
                     className="bg-transparent border-none outline-none text-white placeholder-white/45 flex-1 pr-2 text-sm w-full leading-relaxed focus:ring-0"
@@ -158,7 +178,7 @@ export default function Hero() {
             className="mt-4"
           >
             <button
-              onClick={() => setShowDemoModal(true)}
+              onClick={handleOpenDemo}
               className="text-white/80 hover:text-white transition-colors duration-300 text-[13px] font-medium tracking-wide cursor-pointer flex items-center gap-2"
             >
               <Play className="w-3.5 h-3.5 fill-white/80" />

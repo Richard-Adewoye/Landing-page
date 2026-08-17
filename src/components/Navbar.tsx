@@ -25,11 +25,8 @@ export default function Navbar() {
 
   return (
     <>
-      <motion.nav
+      <nav
         id="navbar"
-        initial={{ y: -20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         className="relative z-20 px-6 py-6 w-full"
       >
         <div className="liquid-glass rounded-full px-6 py-3 flex items-center justify-between max-w-5xl mx-auto">
@@ -84,7 +81,7 @@ export default function Navbar() {
             </button>
           </div>
         </div>
-      </motion.nav>
+      </nav>
 
       {/* Accessible Cookie Compliance Banner */}
       <AnimatePresence>

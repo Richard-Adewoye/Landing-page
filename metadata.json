@@ -1,0 +1,6 @@
+{
+  "name": "Asme Landing Page",
+  "description": "A high-end, single-screen landing page featuring a stunning full-screen background video, glassmorphism navbar, and an interactive email capture CTA.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

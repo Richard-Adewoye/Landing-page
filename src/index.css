@@ -10,6 +10,11 @@
   --foreground: #ffffff;
 }
 
+html {
+  scroll-behavior: smooth;
+  scroll-snap-type: y mandatory;
+}
+
 body {
   background-color: var(--background);
   color: var(--foreground);
@@ -17,6 +22,7 @@ body {
   -webkit-font-smoothing: antialiased;
   letter-spacing: -0.01em;
 }
+
 
 .liquid-glass {
   background: rgba(255, 255, 255, 0.01);

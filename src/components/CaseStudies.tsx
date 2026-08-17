@@ -96,7 +96,7 @@ export default function CaseStudies() {
     <section
       id="case-studies"
       ref={containerRef}
-      className="relative z-10 w-full py-24 md:py-32 px-6 border-t border-white/10 bg-black text-white overflow-hidden"
+      className="relative z-10 w-full min-h-screen flex flex-col justify-center py-20 md:py-28 px-6 border-t border-white/10 bg-black text-white overflow-hidden"
     >
       {/* Parallax Ambient Aura */}
       <motion.div

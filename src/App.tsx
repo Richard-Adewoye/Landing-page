@@ -55,13 +55,13 @@ export default function App() {
         initial="hidden"
         animate="visible"
         variants={pageVariants}
-        className="relative bg-black min-h-screen w-full flex flex-col selection:bg-white selection:text-black overflow-x-hidden"
+        className="relative bg-black min-h-screen w-full flex flex-col selection:bg-white selection:text-black overflow-x-hidden snap-y snap-mandatory scroll-smooth"
       >
         <TopProgressBar />
         <FilmGrainOverlay />
 
         {/* Hero Area (Full Screen with Background Video) */}
-        <div className="relative min-h-screen w-full flex flex-col justify-between">
+        <div id="hero-section" className="relative min-h-screen w-full flex flex-col justify-between snap-start snap-always">
           <BackgroundVideo />
 
           <motion.div variants={sectionVariants} className="w-full relative z-20">
@@ -74,17 +74,17 @@ export default function App() {
         </div>
 
         {/* Section 1: Editorial Architecture Manifesto */}
-        <motion.div variants={sectionVariants} className="w-full relative z-10">
+        <motion.div variants={sectionVariants} className="w-full relative z-10 snap-start snap-always">
           <EditorialIntro />
         </motion.div>
 
         {/* Section 2: Case Studies & Industry Accolades */}
-        <motion.div variants={sectionVariants} className="w-full relative z-10">
+        <motion.div variants={sectionVariants} className="w-full relative z-10 snap-start snap-always">
           <CaseStudies />
         </motion.div>
 
         {/* Footer */}
-        <motion.div variants={sectionVariants} className="w-full relative z-10">
+        <motion.div variants={sectionVariants} className="w-full relative z-10 snap-start snap-always">
           <Footer />
         </motion.div>
       </motion.main>

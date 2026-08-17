@@ -28,7 +28,7 @@ export default function EditorialIntro() {
     <section
       id="editorial-intro"
       ref={containerRef}
-      className="relative z-10 w-full py-24 md:py-32 px-6 border-t border-white/10 bg-black/95 text-white overflow-hidden"
+      className="relative z-10 w-full min-h-screen flex flex-col justify-center py-20 md:py-28 px-6 border-t border-white/10 bg-black/95 text-white overflow-hidden"
     >
       {/* Parallax Ambient Background Elements */}
       <motion.div

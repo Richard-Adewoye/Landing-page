@@ -1,11 +1,13 @@
 import React, { useState } from "react";
-import { ArrowRight, Check, Globe } from "lucide-react";
+import { motion, AnimatePresence } from "motion/react";
+import { ArrowRight, Check, Globe, Sparkles, ArrowUpRight, Code2 } from "lucide-react";
 import { useInteraction } from "../context/InteractionContext";
 
 export default function Footer() {
   const { recordInteraction, setProgress } = useInteraction();
   const [newsletterEmail, setNewsletterEmail] = useState("");
   const [subscribed, setSubscribed] = useState(false);
+  const [isSignatureHovered, setIsSignatureHovered] = useState(false);
 
   const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault();
@@ -18,6 +20,10 @@ export default function Footer() {
       setSubscribed(false);
       setNewsletterEmail("");
     }, 4000);
+  };
+
+  const handleSignatureInteraction = () => {
+    recordInteraction(8);
   };
 
   return (
@@ -116,8 +122,69 @@ export default function Footer() {
           </div>
         </div>
 
+        {/* Refined 'Made by Asme' Expanding Brand Signature */}
+        <div className="pt-10 pb-6 flex justify-center">
+          <motion.div
+            id="brand-signature"
+            onMouseEnter={() => {
+              setIsSignatureHovered(true);
+              handleSignatureInteraction();
+            }}
+            onMouseLeave={() => setIsSignatureHovered(false)}
+            onClick={handleSignatureInteraction}
+            layout
+            transition={{ type: "spring", stiffness: 350, damping: 30 }}
+            className="group relative cursor-pointer liquid-glass rounded-full border border-white/15 hover:border-[#002FA7]/60 hover:bg-white/[0.04] p-1.5 transition-all duration-300 shadow-[0_0_20px_rgba(0,0,0,0.5)]"
+          >
+            {/* Ambient Klein Blue Glow on Hover */}
+            <div className="absolute inset-0 rounded-full bg-[#002FA7]/0 group-hover:bg-[#002FA7]/15 blur-md transition-all duration-500 pointer-events-none" />
+
+            <div className="relative z-10 flex items-center gap-3 px-3.5 py-1">
+              {/* Monogram Badge */}
+              <div className="flex items-center gap-2">
+                <div className="w-1.5 h-1.5 rounded-full bg-[#002FA7] group-hover:shadow-[0_0_8px_#002FA7] transition-shadow duration-300" />
+                <span
+                  style={{ fontFamily: "'Instrument Serif', serif" }}
+                  className="text-base text-white/90 italic tracking-tight font-normal"
+                >
+                  Asme
+                </span>
+              </div>
+
+              {/* Dividing separator */}
+              <div className="w-[1px] h-3 bg-white/20" />
+
+              {/* Dynamic Label */}
+              <span className="text-[11px] font-mono tracking-widest text-white/70 group-hover:text-white uppercase whitespace-nowrap transition-colors">
+                Made by Asme
+              </span>
+
+              {/* Expanding details on hover */}
+              <AnimatePresence>
+                {isSignatureHovered && (
+                  <motion.div
+                    initial={{ opacity: 0, width: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, width: "auto", scale: 1 }}
+                    exit={{ opacity: 0, width: 0, scale: 0.95 }}
+                    transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                    className="flex items-center gap-3 overflow-hidden pl-1 whitespace-nowrap"
+                  >
+                    <span className="text-[10px] font-mono text-white/40 tracking-wider">
+                      // ATELIER FOR COGNITIVE ARTIFACTS
+                    </span>
+                    <span className="text-[9px] font-mono bg-[#002FA7]/20 border border-[#002FA7]/40 text-white px-2 py-0.5 rounded-full">
+                      SF • TYO
+                    </span>
+                    <ArrowUpRight className="w-3.5 h-3.5 text-[#002FA7] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          </motion.div>
+        </div>
+
         {/* Bottom Colophon */}
-        <div className="flex flex-col sm:flex-row items-center justify-between pt-8 text-[11px] font-mono text-white/40 gap-4">
+        <div className="flex flex-col sm:flex-row items-center justify-between pt-4 text-[11px] font-mono text-white/40 gap-4">
           <div className="flex items-center gap-3">
             <Globe className="w-4 h-4 text-white/50" />
             <span>© 2026 ASME LABS INC. ALL RIGHTS RESERVED.</span>
@@ -133,3 +200,4 @@ export default function Footer() {
     </footer>
   );
 }
+

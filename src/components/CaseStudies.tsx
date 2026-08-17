@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { useState, useRef } from "react";
+import { motion, AnimatePresence, useScroll, useTransform } from "motion/react";
 import { ArrowUpRight, Award, ChevronRight, X, ExternalLink, Activity, Box, Compass } from "lucide-react";
 import { useInteraction } from "../context/InteractionContext";
 
@@ -65,18 +65,46 @@ const awards = [
 export default function CaseStudies() {
   const { recordInteraction, setProgress } = useInteraction();
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const containerRef = useRef<HTMLElement | null>(null);
+
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"],
+  });
+
+  // Staggered parallax depth transforms for each card column
+  const card1Y = useTransform(scrollYProgress, [0, 1], [40, -40]);
+  const card2Y = useTransform(scrollYProgress, [0, 1], [80, -80]);
+  const card3Y = useTransform(scrollYProgress, [0, 1], [30, -30]);
+
+  // Ambient parallax glow
+  const ambientAuraY = useTransform(scrollYProgress, [0, 1], [-100, 120]);
+  const awardsY = useTransform(scrollYProgress, [0, 1], [30, -30]);
 
   const handleOpenProject = (project: Project) => {
     setSelectedProject(project);
     recordInteraction(15);
   };
 
+  const getCardYTransform = (index: number) => {
+    if (index === 0) return card1Y;
+    if (index === 1) return card2Y;
+    return card3Y;
+  };
+
   return (
     <section
       id="case-studies"
-      className="relative z-10 w-full py-24 md:py-32 px-6 border-t border-white/10 bg-black text-white"
+      ref={containerRef}
+      className="relative z-10 w-full py-24 md:py-32 px-6 border-t border-white/10 bg-black text-white overflow-hidden"
     >
-      <div className="max-w-6xl mx-auto">
+      {/* Parallax Ambient Aura */}
+      <motion.div
+        style={{ y: ambientAuraY }}
+        className="absolute top-1/3 -right-40 w-[500px] h-[500px] bg-[#002FA7]/12 rounded-full blur-[140px] pointer-events-none"
+      />
+
+      <div className="max-w-6xl mx-auto relative z-10">
         {/* Split Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between pb-8 mb-16 border-b border-white/10 gap-6">
           <div>
@@ -101,13 +129,14 @@ export default function CaseStudies() {
           </a>
         </div>
 
-        {/* 3-Column Strict Architectural Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {projects.map((project) => (
+        {/* 3-Column Parallax Architectural Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
+          {projects.map((project, idx) => (
             <motion.div
               key={project.id}
+              style={{ y: getCardYTransform(idx) }}
               onClick={() => handleOpenProject(project)}
-              whileHover={{ y: -6 }}
+              whileHover={{ scale: 1.02 }}
               transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
               className="group relative rounded-2xl overflow-hidden liquid-glass border border-white/10 hover:border-[#002FA7]/50 transition-all duration-300 flex flex-col justify-between cursor-pointer p-6 min-h-[460px]"
             >
@@ -161,7 +190,7 @@ export default function CaseStudies() {
         </div>
 
         {/* Minimalist Award Marquee & Industry Recognition */}
-        <div className="mt-24 pt-12 border-t border-white/10">
+        <motion.div style={{ y: awardsY }} className="mt-24 pt-12 border-t border-white/10">
           <div className="text-center mb-8">
             <span className="text-[10px] font-mono uppercase tracking-[0.3em] text-white/40">
               [ RECOGNITION & EDITORIAL HONORS ]
@@ -186,7 +215,7 @@ export default function CaseStudies() {
               </div>
             ))}
           </div>
-        </div>
+        </motion.div>
       </div>
 
       {/* Interactive Project Case Study Drawer Modal */}
@@ -268,3 +297,4 @@ export default function CaseStudies() {
     </section>
   );
 }
+

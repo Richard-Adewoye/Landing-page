@@ -1,11 +1,23 @@
-import { useState } from "react";
-import { motion } from "motion/react";
+import { useState, useRef } from "react";
+import { motion, useScroll, useTransform } from "motion/react";
 import { ArrowUpRight, Cpu, Sparkles, Layers, Terminal } from "lucide-react";
 import { useInteraction } from "../context/InteractionContext";
 
 export default function EditorialIntro() {
   const { recordInteraction } = useInteraction();
   const [activeTab, setActiveTab] = useState<"synthesis" | "topology" | "latency">("synthesis");
+  const containerRef = useRef<HTMLElement | null>(null);
+
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"],
+  });
+
+  // Parallax layers
+  const bgGlowY = useTransform(scrollYProgress, [0, 1], [-80, 100]);
+  const bgGridY = useTransform(scrollYProgress, [0, 1], [-40, 60]);
+  const specCardY = useTransform(scrollYProgress, [0, 1], [50, -50]);
+  const textY = useTransform(scrollYProgress, [0, 1], [20, -20]);
 
   const handleTabChange = (tab: "synthesis" | "topology" | "latency") => {
     setActiveTab(tab);
@@ -15,9 +27,20 @@ export default function EditorialIntro() {
   return (
     <section
       id="editorial-intro"
-      className="relative z-10 w-full py-24 md:py-32 px-6 border-t border-white/10 bg-black/95 text-white"
+      ref={containerRef}
+      className="relative z-10 w-full py-24 md:py-32 px-6 border-t border-white/10 bg-black/95 text-white overflow-hidden"
     >
-      <div className="max-w-6xl mx-auto">
+      {/* Parallax Ambient Background Elements */}
+      <motion.div
+        style={{ y: bgGlowY }}
+        className="absolute top-1/4 -left-32 w-96 h-96 bg-[#002FA7]/15 rounded-full blur-[120px] pointer-events-none"
+      />
+      <motion.div
+        style={{ y: bgGridY }}
+        className="absolute bottom-10 right-0 w-80 h-80 bg-white/[0.02] rounded-full blur-[90px] pointer-events-none"
+      />
+
+      <div className="max-w-6xl mx-auto relative z-10">
         {/* Micro Section Marker */}
         <div className="flex items-center justify-between pb-6 mb-12 border-b border-white/10 text-[11px] font-mono tracking-widest text-white/50 uppercase">
           <span>// 01 ARCHITECTURAL MANIFESTO</span>
@@ -27,7 +50,7 @@ export default function EditorialIntro() {
         {/* Two-Column Asymmetrical Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
           {/* Left Column (Span 7) - Large Editorial Typography & Statement */}
-          <div className="lg:col-span-7 flex flex-col justify-between">
+          <motion.div style={{ y: textY }} className="lg:col-span-7 flex flex-col justify-between">
             <div className="space-y-6">
               <span className="inline-block text-[11px] font-mono tracking-[0.25em] text-[#002FA7] uppercase font-semibold bg-[#002FA7]/10 px-3 py-1 rounded-full border border-[#002FA7]/30">
                 Cognitive Mediums
@@ -112,10 +135,10 @@ export default function EditorialIntro() {
                 <ArrowUpRight className="w-4 h-4 text-white/60 group-hover:text-[#002FA7] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200" />
               </a>
             </div>
-          </div>
+          </motion.div>
 
-          {/* Right Column (Span 5) - High-Fashion Editorial Spec Container */}
-          <div className="lg:col-span-5 relative">
+          {/* Right Column (Span 5) - Parallax Editorial Spec Container */}
+          <motion.div style={{ y: specCardY }} className="lg:col-span-5 relative">
             <div className="relative rounded-2xl overflow-hidden liquid-glass border border-white/15 p-6 backdrop-blur-xl">
               {/* Monogram graphic header */}
               <div className="flex items-center justify-between pb-4 mb-6 border-b border-white/10">
@@ -169,9 +192,10 @@ export default function EditorialIntro() {
                 [ PRECISION ARCHITECTURE FOR GENERATIVE WORKSPACES ]
               </p>
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>
   );
 }
+

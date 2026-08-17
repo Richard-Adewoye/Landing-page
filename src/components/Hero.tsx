@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { motion, AnimatePresence, useScroll, useTransform } from "motion/react";
 import { ArrowRight, Check, Play, X } from "lucide-react";
 import { useInteraction } from "../context/InteractionContext";
 
@@ -9,6 +9,11 @@ export default function Hero() {
   const [email, setEmail] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [showDemoModal, setShowDemoModal] = useState(false);
+
+  const { scrollYProgress } = useScroll();
+  const heroY = useTransform(scrollYProgress, [0, 0.35], [0, -65]);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.3], [1, 0.25]);
+  const heroScale = useTransform(scrollYProgress, [0, 0.35], [1, 0.96]);
 
   // Typewriting state for CTA placeholder
   const [placeholder, setPlaceholder] = useState("");
@@ -86,7 +91,10 @@ export default function Hero() {
   return (
     <>
       <section className="relative flex-1 flex flex-col items-center justify-center px-6">
-        <div className="relative z-10 text-center max-w-5xl mx-auto flex flex-col items-center justify-center w-full gap-12">
+        <motion.div
+          style={{ y: heroY, opacity: heroOpacity, scale: heroScale }}
+          className="relative z-10 text-center max-w-5xl mx-auto flex flex-col items-center justify-center w-full gap-12 will-change-transform"
+        >
           
           {/* Tagline */}
           <motion.p
@@ -196,7 +204,7 @@ export default function Hero() {
             </a>
           </motion.div>
 
-        </div>
+        </motion.div>
       </section>
 
       {/* Elegant Cinematic Playback Modal (Alternative to alert/window.open) */}
@@ -243,3 +251,4 @@ export default function Hero() {
     </>
   );
 }
+

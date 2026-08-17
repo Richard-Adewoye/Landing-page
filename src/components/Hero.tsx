@@ -175,7 +175,7 @@ export default function Hero() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.8 }}
-            className="mt-4"
+            className="mt-4 flex flex-col items-center gap-6"
           >
             <button
               onClick={handleOpenDemo}
@@ -184,6 +184,16 @@ export default function Hero() {
               <Play className="w-3.5 h-3.5 fill-white/80" />
               Play Video Demo
             </button>
+
+            {/* Micro Scroll Prompt */}
+            <a
+              href="#editorial-intro"
+              onClick={() => recordInteraction(8)}
+              className="group flex flex-col items-center gap-1.5 text-[10px] font-mono tracking-[0.25em] text-white/40 hover:text-white transition-colors mt-2"
+            >
+              <span className="uppercase">Scroll To Explore</span>
+              <div className="w-[1px] h-6 bg-gradient-to-b from-white/40 to-transparent group-hover:from-[#002FA7] group-hover:h-8 transition-all duration-300" />
+            </a>
           </motion.div>
 
         </div>

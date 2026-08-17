@@ -7,6 +7,9 @@ import { motion } from "motion/react";
 import BackgroundVideo from "./components/BackgroundVideo";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
+import EditorialIntro from "./components/EditorialIntro";
+import CaseStudies from "./components/CaseStudies";
+import Footer from "./components/Footer";
 import FilmGrainOverlay from "./components/FilmGrainOverlay";
 import TopProgressBar from "./components/TopProgressBar";
 import { InteractionProvider } from "./context/InteractionContext";
@@ -52,22 +55,42 @@ export default function App() {
         initial="hidden"
         animate="visible"
         variants={pageVariants}
-        className="relative bg-black h-screen w-screen flex flex-col overflow-hidden selection:bg-white selection:text-black shrink-0"
+        className="relative bg-black min-h-screen w-full flex flex-col selection:bg-white selection:text-black overflow-x-hidden"
       >
         <TopProgressBar />
-        <BackgroundVideo />
         <FilmGrainOverlay />
-        
-        <motion.div variants={sectionVariants} className="w-full relative z-20">
-          <Navbar />
+
+        {/* Hero Area (Full Screen with Background Video) */}
+        <div className="relative min-h-screen w-full flex flex-col justify-between">
+          <BackgroundVideo />
+
+          <motion.div variants={sectionVariants} className="w-full relative z-20">
+            <Navbar />
+          </motion.div>
+
+          <motion.div variants={sectionVariants} className="flex-1 flex flex-col w-full relative z-10">
+            <Hero />
+          </motion.div>
+        </div>
+
+        {/* Section 1: Editorial Architecture Manifesto */}
+        <motion.div variants={sectionVariants} className="w-full relative z-10">
+          <EditorialIntro />
         </motion.div>
-        
-        <motion.div variants={sectionVariants} className="flex-1 flex flex-col w-full relative z-10">
-          <Hero />
+
+        {/* Section 2: Case Studies & Industry Accolades */}
+        <motion.div variants={sectionVariants} className="w-full relative z-10">
+          <CaseStudies />
+        </motion.div>
+
+        {/* Footer */}
+        <motion.div variants={sectionVariants} className="w-full relative z-10">
+          <Footer />
         </motion.div>
       </motion.main>
     </InteractionProvider>
   );
 }
+
 
 
